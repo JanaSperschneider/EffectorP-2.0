@@ -1,6 +1,6 @@
 #! /usr/bin/python
 """
-    EffectorP 2.0: predicting fungal effector proteins from secretomes using machine learning
+    Improved prediction of fungal effector proteins from secretomes with EffectorP 2.0
     Copyright (C) 2017-2018 Jana Sperschneider	
 
     This program is free software; you can redistribute it and/or modify  

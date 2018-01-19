@@ -25,7 +25,7 @@ ___________________________________________________________________
 EMBOSS (http://emboss.sourceforge.net/)
 This software is licensed under GNU GPL.
 
-WEKA 3.6.12 (http://sourceforge.net/projects/weka/)
+WEKA 3.8.1 (http://sourceforge.net/projects/weka/)
 This software is licensed under GNU GPL.
 ___________________________________________________________________
 
