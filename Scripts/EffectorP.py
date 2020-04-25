@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python3
 """
     Improved prediction of fungal effector proteins from secretomes with EffectorP 2.0
     Copyright (C) 2017-2018 Jana Sperschneider	
@@ -39,7 +39,8 @@ import numpy as np
 # -----------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------
 # -----------------------------------------------------------------------------------------------------------
-if __name__ == '__main__': 
+
+def main():
     # -----------------------------------------------------------------------------------------------------------
     SCRIPT_PATH = sys.path[0]
     # Change the path to WEKA to the appropriate location on your computer
@@ -49,20 +50,20 @@ if __name__ == '__main__':
     # Check that the path to the WEKA software exists
     path_exists = os.access(WEKA_PATH, os.F_OK)
     if not path_exists:
-        print
-        print "Path to WEKA software does not exist!"
-        print "Check the installation and the given path to the WEKA software %s in EffectorP.py (line 47)."%WEKA_PATH
-        print
-        sys.exit()
+        print()
+        print("Path to WEKA software does not exist!")
+        print("Check the installation and the given path to the WEKA software %s in EffectorP.py (line 47)." % WEKA_PATH)
+        print()
+        sys.exit(1)
     # -----------------------------------------------------------------------------------------------------------
     # Check that the path to the EMBOSS software exists for pepstats
     path_exists = os.access(PEPSTATS_PATH, os.F_OK)
     if not path_exists:
-        print
-        print "Path to EMBOSS software does not exist!"
-        print "Check the installation and the given path to the EMBOSS software %s in EffectorP.py (line 48)."%PEPSTATS_PATH
-        print
-        sys.exit()
+        print()
+        print("Path to EMBOSS software does not exist!")
+        print("Check the installation and the given path to the EMBOSS software %s in EffectorP.py (line 48)." % PEPSTATS_PATH)
+        print()
+        sys.exit(1)
     # -----------------------------------------------------------------------------------------------------------
     commandline = sys.argv[1:]
     # -----------------------------------------------------------------------------------------------------------
@@ -70,8 +71,8 @@ if __name__ == '__main__':
         FASTA_FILE, short_format, output_file, effector_output, noneffector_output = functions.scan_arguments(commandline)
 	# If no FASTA file was provided with the -i option
         if not FASTA_FILE:
-            print
-            print 'Please specify a FASTA input file using the -i option!'
+            print()
+            print('Please specify a FASTA input file using the -i option!')
             functions.usage()
     else:
         functions.usage()
@@ -82,10 +83,10 @@ if __name__ == '__main__':
     # Check if FASTA file exists
     try:
         open(FASTA_FILE, 'r') 
-    except IOError as (errno, strerror):
-        print "Unable to open FASTA file:", FASTA_FILE  #Does not exist OR no read permissions
-        print "I/O error({0}): {1}".format(errno, strerror)
-        sys.exit()
+    except OSError as e:
+        print("Unable to open FASTA file:", FASTA_FILE)  #Does not exist OR no read permissions
+        print("I/O error({0}): {1}".format(e.errno, e.strerror))
+        sys.exit(1)
     # -----------------------------------------------------------------------------------------------------------
     # Try to create folder where results will be stored
     try:
@@ -98,17 +99,17 @@ if __name__ == '__main__':
     ORIGINAL_IDENTIFIERS, SEQUENCES = functions.get_seqs_ids_fasta(FASTA_FILE)
     SEQUENCES = [seq.upper() for seq in SEQUENCES]
     # -----------------------------------------------------------------------------------------------------------
-    print '-----------------'
-    print 
-    print "EffectorP 2.0 is running for", len(ORIGINAL_IDENTIFIERS), "proteins given in FASTA file", FASTA_FILE
-    print
+    print('-----------------')
+    print()
+    print("EffectorP 2.0 is running for", len(ORIGINAL_IDENTIFIERS), "proteins given in FASTA file", FASTA_FILE)
+    print()
     # -----------------------------------------------------------------------------------------------------------
     # Write new FASTA file with short identifiers because pepstats can't handle long names
     f_output = RESULTS_PATH + 'short_ids.fasta'
     SHORT_IDENTIFIERS = functions.write_FASTA_short_ids(f_output, ORIGINAL_IDENTIFIERS, SEQUENCES)
     # -----------------------------------------------------------------------------------------------------------
     # Call pepstats
-    print 'Call pepstats...'
+    print('Call pepstats...')
     ProcessExe = PEPSTATS_PATH + 'pepstats'
     ParamList = [ProcessExe, '-sequence', RESULTS_PATH + 'short_ids.fasta', 
               '-outfile', RESULTS_PATH +  'pepstats.out']
@@ -126,16 +127,16 @@ if __name__ == '__main__':
             sys.exit()
     except:
         e = sys.exc_info()[1]
-        print "Error calling pepstats: %s" % e
+        print("Error calling pepstats: %s" % e)
         sys.exit()
-    print 'Done.'
-    print
+    print('Done.')
+    print()
     # -----------------------------------------------------------------------------------------------------------
     # Parse pepstats file
-    print 'Scan pepstats file'
+    print('Scan pepstats file')
     pepstats_dic = functions.pepstats(SHORT_IDENTIFIERS, SEQUENCES, RESULTS_PATH +  'pepstats.out')
-    print 'Done.'
-    print
+    print('Done.')
+    print()
     # -----------------------------------------------------------------------------------------------------------
     # Write the WEKA arff file for classification of the input FASTA file
     weka_input = RESULTS_PATH + 'weka.arff'    
@@ -148,7 +149,7 @@ if __name__ == '__main__':
     # -----------------------------------------------------------------------------------------------------------
     models = functions.models_bayes + functions.models_J48
     # -----------------------------------------------------------------------------------------------------------
-    print 'Ensemble classification'
+    print('Ensemble classification')
     for model in functions.models_bayes:
         #--------------------------------------------------------------
         ParamList = ['java', '-cp', WEKA_PATH, 'weka.classifiers.bayes.NaiveBayes', '-l', SCRIPT_PATH + model, '-T', RESULTS_PATH + 'weka.arff', '-p', 'first-last']
@@ -167,8 +168,8 @@ if __name__ == '__main__':
                     sys.exit()
             except:
                 e = sys.exc_info()[1]
-                print "Error calling WEKA: %s" % e
-                sys.exit()
+                print("Error calling WEKA: %s" % e)
+                sys.exit(1)
         #-------------------------------------------------------------- 
         # Parse the WEKA output file
         file_input = RESULTS_PATH + 'Predictions.txt'
@@ -202,8 +203,8 @@ if __name__ == '__main__':
                     sys.exit()
             except:
                 e = sys.exc_info()[1]
-                print "Error calling WEKA: %s" % e
-                sys.exit()
+                print("Error calling WEKA: %s" % e)
+                sys.exit(1)
         #-------------------------------------------------------------- 
         # Parse the WEKA output file
         file_input = RESULTS_PATH + 'Predictions.txt'
@@ -218,8 +219,8 @@ if __name__ == '__main__':
                 ensembl_votes[short_ident] = previous_predictions + [(prediction, prob)]
             else:
                 ensembl_votes[short_ident] = [(prediction, prob)]
-    print 'Done.'
-    print
+    print('Done.')
+    print()
     #--------------------------------------------------------------
     # Soft voting
     #--------------------------------------------------------------
@@ -272,16 +273,16 @@ if __name__ == '__main__':
             else:
                 out.writelines(functions.short_output(ensemble_predictions))
                 out.writelines(functions.long_output(ORIGINAL_IDENTIFIERS, predicted_effectors))                
-        print 'EffectorP results were saved to output file:', output_file  
+        print('EffectorP results were saved to output file:', output_file) 
 
     else:
         # Short format: output predictions for all proteins as tab-delimited table to stdout
         if short_format:
-            print functions.short_output(ensemble_predictions)
+            print(functions.short_output(ensemble_predictions))
         # If the user wants to see the long format, output additional information and stats
         else:
-            print functions.short_output(ensemble_predictions)
-            print functions.long_output(ORIGINAL_IDENTIFIERS, predicted_effectors)
+            print(functions.short_output(ensemble_predictions))
+            print(functions.long_output(ORIGINAL_IDENTIFIERS, predicted_effectors))
     # -----------------------------------------------------------------------------------------------------------
     # If the user additionally wants to save the predicted effectors in a provided FASTA file
     if effector_output:
@@ -312,3 +313,5 @@ if __name__ == '__main__':
         pass
     # -----------------------------------------------------------------------------------------------------------
 
+if __name__ == '__main__': 
+    main()
