@@ -34,7 +34,7 @@ EffectorP has been written in Python and uses pepstats from the EMBOSS software 
 
 0. Download the latest release from this github repo (or alternatively you can clone the github repo and skip step 1).
 
-1. Make sure EffectorP has the permission to execute. Then unpack LOCALIZER in your desired location
+1. Make sure EffectorP has the permission to execute. Then unpack EffectorP in your desired location
 ```
 tar xvf EffectorP-2.0.1.tar.gz
 chmod -R 755 EffectorP-2.0.1/
