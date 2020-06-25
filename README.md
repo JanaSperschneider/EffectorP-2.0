@@ -63,6 +63,12 @@ If you are having troube installing WEKA, please see [here](https://www.cs.waika
 python EffectorP.py -i Effector_Testing.fasta
 ```
 
+#### EffectorP output format
+Run this to get a feel for the output format:
+```
+python EffectorP.py -i Effector_Testing.fasta
+```
+
 #### Citation for EffectorP 
  
 Sperschneider J, Dodds PN, Gardiner DM, Singh KB, Taylor JM (2018) Improved prediction of fungal effector proteins from secretomes with EffectorP 2.0. Molecular Plant Pathology. [Link to paper](https://bsppjournals.onlinelibrary.wiley.com/doi/full/10.1111/mpp.12682)
