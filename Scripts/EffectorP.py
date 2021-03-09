@@ -154,7 +154,7 @@ def main():
         #--------------------------------------------------------------
         ParamList = ['java', '-cp', WEKA_PATH, 'weka.classifiers.bayes.NaiveBayes', '-l', SCRIPT_PATH + model, '-T', RESULTS_PATH + 'weka.arff', '-p', 'first-last']
 
-        with open(RESULTS_PATH + 'Predictions.txt', 'wb') as out:
+        with open(RESULTS_PATH + 'Predictions.txt', 'w') as out:
             try:
                 Process = subprocess.Popen(ParamList, shell=False, stdout=out)
                 sts = Process.wait()
@@ -189,7 +189,7 @@ def main():
         #--------------------------------------------------------------
         ParamList = ['java', '-cp', WEKA_PATH, 'weka.classifiers.trees.J48', '-l', SCRIPT_PATH + model, '-T', RESULTS_PATH + 'weka.arff', '-p', 'first-last']
 
-        with open(RESULTS_PATH + 'Predictions.txt', 'wb') as out:
+        with open(RESULTS_PATH + 'Predictions.txt', 'w') as out:
             try:
                 Process = subprocess.Popen(ParamList, shell=False, stdout=out)
                 sts = Process.wait()
@@ -265,7 +265,7 @@ def main():
     # If user wants the stdout output directed to a specified file
     if output_file:
 
-        with open(output_file, 'wb') as out:
+        with open(output_file, 'w') as out:
             # Short format: output predictions for all proteins as tab-delimited table
             if short_format:
                 out.writelines(functions.short_output(ensemble_predictions))
